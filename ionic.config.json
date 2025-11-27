@@ -1,0 +1,7 @@
+{
+  "name": "UmaApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
