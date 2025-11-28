@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import { createPinia } from 'pinia'
 
 import { IonicVue } from '@ionic/vue';
 
@@ -34,8 +35,14 @@ import '@ionic/vue/css/palettes/dark.system.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import './theme/main.css'
+
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap'
+
 const app = createApp(App)
   .use(IonicVue)
+  .use(createPinia())
   .use(router);
 
 router.isReady().then(() => {
