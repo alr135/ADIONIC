@@ -44,8 +44,17 @@ export const useAuthStore = defineStore('auth', () => {
     error.value = null
     try {
       const authData = await loginService(email, password)
+
+      // Actualizar el authStore de PocketBase primero
+      if (pb?.authStore) {
+        pb.authStore.save(authData.token, authData.record)
+      }
+
       user.value = authData.record
       isLoggedIn.value = true
+      if(pb?.authStore) {
+        pb.authStore.save(authData.token, authData.record)
+      }
       return authData
     } catch (err) {
       error.value = err.message || String(err)

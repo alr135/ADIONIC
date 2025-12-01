@@ -67,7 +67,7 @@ async function reloadCaballosForDev() {
 
 onMounted(() => {
   store.loadCaballos()
-  authStore.initAuth()
+  
 })
 </script>
 
@@ -197,7 +197,7 @@ onMounted(() => {
 Layout principal
 .lista-caballos padding y espaciado del título
 */
-.lista-caballos { margin-top: 1rem; padding: 0 1rem; }
+.lista-caballos { margin-top: 1rem; padding: 0 1rem; margin: auto; max-width: 1200px; }
 h2 { margin-bottom: 1.5rem; }
 
 /*

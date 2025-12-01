@@ -3,6 +3,7 @@
 import CaballoForm from '../components/CaballoForm.vue'
 import { useRouter } from 'vue-router';
 import { createCaballo } from '../backend/caballoService';
+import { IonPage, IonContent } from '@ionic/vue';
 
 const router = useRouter();
 
@@ -19,8 +20,11 @@ async function handleCrearCaballo(payload){
 </script>
 
 <template>
-  <main>
-    <CaballoForm submit-label="Crear Caballo" @submit="handleCrearCaballo"/>
-
-  </main>
+  <ion-page>
+    <ion-content>
+      <main>
+        <CaballoForm submit-label="Crear Caballo" @submit="handleCrearCaballo"/>
+      </main>
+    </ion-content>
+  </ion-page>
 </template>

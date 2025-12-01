@@ -170,7 +170,7 @@ Layout principal
 .lista-noticias contiene el padding y separación superior.
 h2 controla el espaciado del título.
 */
-.lista-noticias { padding: 0 1rem; margin-top: 1rem; }
+.lista-noticias { margin-top: 1rem; padding: 0 1rem; margin: auto; max-width: 1200px; }
 .lista-noticias h2 { margin-bottom: 1.5rem; }
 
 /*

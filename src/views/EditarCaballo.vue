@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CaballoForm from '../components/CaballoForm.vue'
 import { getCaballoById, updateCaballo } from '../backend/caballoService'
+import { IonPage, IonContent } from '@ionic/vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -29,14 +30,18 @@ async function handleUpdate(payload) {
 </script>
 
 <template>
-  <main>
-    <p v-if="!initial && !error">Cargando…</p>
-    <p v-else-if="error" style="color:#b00020">Error: {{ error }}</p>
-    <CaballoForm
-      v-else
-      :initial="initial"
-      submitLabel="Guardar cambios"
-      @submit="handleUpdate"
-    />
-  </main>
+  <ion-page>
+    <ion-content>
+      <main>
+        <p v-if="!initial && !error">Cargando…</p>
+        <p v-else-if="error" style="color:#b00020">Error: {{ error }}</p>
+        <CaballoForm
+          v-else
+          :initial="initial"
+          submitLabel="Guardar cambios"
+          @submit="handleUpdate"
+        />
+      </main>
+    </ion-content>
+  </ion-page>
 </template>

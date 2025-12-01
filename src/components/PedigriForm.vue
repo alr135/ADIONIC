@@ -3,7 +3,7 @@
 import { ref, onMounted } from 'vue';
 import { useCaballosStore } from '../stores/caballosStore.js';
 import { createPedigri, getCaballoById } from '../backend/caballoService.js';
-import router from '@/router/index.js';
+import router from '@/router/index.ts';
 
 /**
  * Componente: PedigriForm

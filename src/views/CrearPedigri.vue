@@ -1,10 +1,14 @@
 <script setup>
 import PedigriForm from '../components/PedigriForm.vue';
-
+import { IonPage, IonContent } from '@ionic/vue';
 </script>
 
 <template>
-    <div>
-        <PedigriForm />
-    </div>
+    <ion-page>
+        <ion-content>
+            <main>
+                <PedigriForm />
+            </main>
+        </ion-content>
+    </ion-page>
 </template>
