@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import CaballoForm from '../components/CaballoForm.vue'
 import { getCaballoById, updateCaballo } from '../backend/caballoService'
 import { IonPage, IonContent } from '@ionic/vue';
+import AppHeader from '../components/AppHeader.vue';
 
 const route = useRoute()
 const router = useRouter()
@@ -31,6 +32,7 @@ async function handleUpdate(payload) {
 
 <template>
   <ion-page>
+    <AppHeader />
     <ion-content>
       <main>
         <p v-if="!initial && !error">Cargando…</p>

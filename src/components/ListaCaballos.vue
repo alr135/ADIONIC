@@ -205,7 +205,7 @@ Grid de tarjetas de caballos
 .caballos-container define la grilla responsive
 .caballo-card estilos base y sombra en hover
 */
-.caballos-container { position: relative; display: grid; gap: 1.5rem; max-width: 1200px; grid-template-columns: repeat(3, minmax(420px, 1fr)); justify-content: center; }
+.caballos-container { position: relative; display: grid; gap: 1rem; max-width: 1200px; grid-template-columns: repeat(3, minmax(240px, 1fr)); justify-content: center; }
 .card-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
 .btn-eliminar { padding: 0.45rem 0.8rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95rem; }
 .btn-eliminar:hover { background: #b02a37; }

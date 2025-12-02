@@ -146,7 +146,7 @@ const handleCreatePedigri = async () => {
 
 <style scoped>
 .pedigri-form {
-    min-width: 500px;
+    min-width: 240px;
     margin: auto;
 }
 
@@ -165,14 +165,15 @@ const handleCreatePedigri = async () => {
     font-weight: bold;
 }
 
-.submit-btn {
+.pedigri-form button {
     padding: 0.5rem 1rem;
-    background-color: #4CAF50;
+    background-color: #42b983;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
 }
+
 
 .pedigri-form select {
     width: 100%;

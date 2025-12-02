@@ -179,7 +179,7 @@ Grid de tarjetas de noticias
 .noticia-card estructura y estilos base de cada tarjeta.
 .noticia-card-main, .noticia-image, .noticia-info controlan el layout interno.
 */
-.noticias-container { display: grid; gap: 1.5rem; max-width: 1200px; grid-template-columns: repeat(3, minmax(420px, 1fr)); justify-content: center; }
+.noticias-container { display: grid; gap: 1.5rem; max-width: 1200px; grid-template-columns: repeat(3, minmax(240px, 1fr)); justify-content: center; }
 .noticia-card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; background: #fff; }
 .noticia-card-main { display:flex; gap:1rem; align-items:flex-start }
 .noticia-image { width:150px; height:100px; overflow:hidden; border-radius:8px; background:#f5f5f5; display:flex; align-items:center; justify-content:center }
