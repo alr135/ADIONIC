@@ -145,7 +145,7 @@ function onSubmit() {
 
 <style scoped>
 .caballo-form {
-    min-width: 500px;
+    min-width: 240px;
     margin: auto;
 }
 

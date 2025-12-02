@@ -19,7 +19,10 @@
     "@capacitor/status-bar": "7.0.3",
     "@ionic/vue": "^8.0.0",
     "@ionic/vue-router": "^8.0.0",
+    "bootstrap": "^5.3.8",
     "ionicons": "^7.0.0",
+    "pinia": "^3.0.4",
+    "pocketbase": "^0.26.3",
     "vue": "^3.3.0",
     "vue-router": "^4.2.0"
   },

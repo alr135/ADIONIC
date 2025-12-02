@@ -4,6 +4,8 @@ import NoticiaForm from '../components/NoticiaForm.vue'
 import { useRouter, useRoute } from 'vue-router';
 import { updateNoticia, getNoticiaById } from '../backend/noticiaService';
 import { ref, onMounted } from 'vue'
+import { IonPage, IonContent } from '@ionic/vue';
+import AppHeader from '../components/AppHeader.vue';
 
 /**
  * 
@@ -40,6 +42,9 @@ async function handleEditarNoticia(payload){
 </script>
 
 <template>
+  <ion-page>
+    <AppHeader />
+    <ion-content>
     <main>
         <p v-if="!initial && !error">Cargando…</p>
         <p v-else-if="error" style="color:#b00020">Error: {{ error }}</p>
@@ -50,4 +55,6 @@ async function handleEditarNoticia(payload){
             @submit="handleEditarNoticia"
         />
     </main>
+    </ion-content>
+  </ion-page>
 </template>

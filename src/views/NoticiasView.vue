@@ -1,11 +1,18 @@
 <script setup>
 import ListaNoticias from '../components/ListaNoticias.vue'
+import { IonPage, IonContent } from '@ionic/vue';
+import AppHeader from '../components/AppHeader.vue';
 </script>
 
 <template>
-  <main>
-    <ListaNoticias />
-  </main>
+  <ion-page>
+    <AppHeader />
+    <ion-content>
+      <main>
+        <ListaNoticias />
+      </main>
+    </ion-content>
+  </ion-page>
 </template>
 
 <!-- Para usar estilo luego cuando estén las cosas funcionando

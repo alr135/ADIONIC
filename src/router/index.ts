@@ -61,8 +61,14 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
+  // Si el usuario ya está logueado y trata de ir a /login, redirigir a home
+  if (to.name === 'Login' && authStore.isLoggedIn) {
+    next({ name: 'caballos' })
+    return
+  }
+
   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    next({ name: 'login', query: { redirect: to.fullPath }})
+    next({ name: 'Login', query: { redirect: to.fullPath }})
     return
   }
   if (to.meta.requiresAdmin && !authStore.isAdmin) {

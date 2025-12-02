@@ -3,6 +3,8 @@
 import NoticiaForm from '../components/NoticiaForm.vue'
 import { useRouter } from 'vue-router';
 import { createNoticia, createNoticiaCaballo } from '../backend/noticiaService';
+import { IonPage, IonContent } from '@ionic/vue';
+import AppHeader from '../components/AppHeader.vue';
 
 const router = useRouter();
 
@@ -41,8 +43,12 @@ async function handleCrearNoticia(payload){
 </script>
 
 <template>
-  <main>
-    <NoticiaForm submit-label="Crear Noticia" @submit="handleCrearNoticia"/>
-
-  </main>
+  <ion-page>
+    <AppHeader />
+    <ion-content>
+      <main>
+        <NoticiaForm submit-label="Crear Noticia" @submit="handleCrearNoticia"/>
+      </main>
+    </ion-content>
+  </ion-page>
 </template>

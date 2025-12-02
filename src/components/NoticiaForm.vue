@@ -147,7 +147,7 @@ function onSubmit() {
 
 <style scoped>
 .noticia-form {
-    min-width: 500px;
+    min-width: 240px;
     margin: auto;
 }
 
