@@ -65,7 +65,7 @@ async function handleLogin() {
   authStore.clearError();
   try {
     await authStore.login(email.value, password.value);
-    await router.push('/');
+    await router.push('/caballos');
   } catch (error) {
     // activar el temblor inmediatamente también para respuesta instantánea
     shake.value = true

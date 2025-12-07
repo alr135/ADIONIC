@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { pb } from '../backend/pb.js'
 import { useRouter } from 'vue-router'
 import { useNoticiasStore } from '../stores/noticiasStore.js'
@@ -69,12 +69,19 @@ async function reloadNoticiasForDev() {
 onMounted(() => {
   store.loadNoticias()
   authStore.initAuth()
+  // Suscribirse a actualizaciones en tiempo real
+  store.subscribeToRealtimeUpdates()
+})
+
+onUnmounted(() => {
+  // Cancelar suscripción al desmontar el componente
+  store.unsubscribeFromRealtimeUpdates()
 })
 
 </script>
 
 <template>
-  <section class="lista-noticias">
+  <section class="lista-noticias" style="margin-top: 1rem;">
     <h2 style="color:aliceblue">Listado de noticias</h2>
 
     <!-- Barra de búsqueda animada -->
@@ -87,6 +94,9 @@ onMounted(() => {
           class="search-input"
         />
         <button class="btn search-btn" @click="store.performSearch">Buscar</button>
+        <button v-if="authStore.isAdmin" @click="$router.push('/crear-noticia')" class="btn nueva-entrada-btn">
+          Nueva Noticia
+        </button>
       </div>
     </Transition>
 
@@ -171,7 +181,7 @@ Layout principal
 h2 controla el espaciado del título.
 */
 .lista-noticias { margin-top: 1rem; padding: 0 1rem; margin: auto; max-width: 1200px; }
-.lista-noticias h2 { margin-bottom: 1.5rem; }
+h2 { margin-bottom: 1.5rem; }
 
 /*
 Grid de tarjetas de noticias
@@ -243,7 +253,16 @@ Barra de búsqueda
 .search-row { display: flex; gap: 0.75rem; margin-bottom: 2rem; margin-top: 1.5rem; width: 100%; max-width: 600px; }
 .search-input { flex: 1; padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s ease; }
 .search-input:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1); }
+.btn { padding: 0.6rem 1.2rem; margin-top: 0.5rem; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-size: 0.95rem; transition: background 0.2s ease; }
+.btn:hover { background: #ffb300; color: #ffffff; }
 .search-btn { padding: 0.75rem 1.5rem; border-radius: 8px; font-size: 1rem; white-space: nowrap; }
+.nueva-entrada-btn {
+  background: #28a745;
+  color: white;
+}
+.nueva-entrada-btn:hover {
+  background: #218838;
+}
 
 /*
 Overlay y stacking

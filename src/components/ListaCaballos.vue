@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { pb } from '../backend/pb.js'
 import { useRouter } from 'vue-router'
 import { useCaballosStore } from '../stores/caballosStore.js'
@@ -67,7 +67,13 @@ async function reloadCaballosForDev() {
 
 onMounted(() => {
   store.loadCaballos()
-  
+  // Suscribirse a actualizaciones en tiempo real
+  store.subscribeToRealtimeUpdates()
+})
+
+onUnmounted(() => {
+  // Cancelar suscripción al desmontar el componente
+  store.unsubscribeFromRealtimeUpdates()
 })
 </script>
 
@@ -84,6 +90,10 @@ onMounted(() => {
           class="search-input"
         />
         <button class="btn search-btn" @click="store.performSearch">Buscar</button>
+        <!-- NUEVO BOTÓN PARA ADMIN -->
+        <button v-if="authStore.isAdmin" @click="$router.push('/crear-caballo')" class="btn nueva-entrada-btn">
+          Nuevo Caballo
+        </button>
       </div>
     </Transition>
 
@@ -272,6 +282,14 @@ estilos compactos para paginación y barra de búsqueda
 .card-content { position: relative; z-index: 2; background: #fff; }
 .detalles-panel-overlay { position: absolute; top: 100%; left: 0; right: 0; z-index: 1; margin-top: 0.5rem; }
 .detalles-panel-content { background: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); border-left: 4px solid #007bff; animation: slideDown 0.3s ease; }
+
+.nueva-entrada-btn {
+  background: #28a745;
+  color: white;
+}
+.nueva-entrada-btn:hover {
+  background: #218838;
+}
 
 /*
 Transiciones y animaciones

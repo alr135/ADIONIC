@@ -1,7 +1,8 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 import { getListaCaballos, getCaballoByText, deleteCaballo } from '../backend/caballoService.js'
 import { getImagenesPorCaballo } from '../backend/imagenService.js'
+import { pb } from '../backend/pb.js'
 
 export const useCaballosStore = defineStore('caballos', () => {
   // Estado reactivo
@@ -14,6 +15,7 @@ export const useCaballosStore = defineStore('caballos', () => {
   const pageSize = 9
   const currentPage = ref(1)
   const pageDirection = ref('next') // 'next' | 'prev'
+  const realtimeSubscription = ref(null) // Nueva: para guardar la suscripción
 
   // Computeds
   const totalPages = computed(() => Math.max(1, Math.ceil(caballos.value.length / pageSize)))
@@ -69,6 +71,81 @@ export const useCaballosStore = defineStore('caballos', () => {
       error.value = err.message || String(err)
     } finally {
       loading.value = false
+    }
+  }
+
+  // Nueva acción: Suscribirse a cambios en tiempo real
+  async function subscribeToRealtimeUpdates() {
+    // Cancelar suscripción anterior si existe
+    if (realtimeSubscription.value) {
+      realtimeSubscription.value.unsubscribe()
+    }
+
+    try {
+      // Suscribirse a la colección 'caballos'
+      realtimeSubscription.value = pb.collection('caballos').subscribe('*', async (e) => {
+        console.log('Evento en tiempo real (caballos):', e.action, e.record)
+        
+        // Actualizar la lista según el tipo de evento
+        switch (e.action) {
+          case 'create':
+            // Añadir el nuevo caballo al final
+            caballos.value.push(e.record);
+            // Precargar imágenes para el nuevo caballo
+            try {
+              const images = await getImagenesPorCaballo(e.record.id)
+              caballoImages.value[e.record.id] = images
+            } catch (err) {
+              console.warn(`No se pudieron cargar imágenes para nuevo caballo ${e.record.id}:`, err)
+              caballoImages.value[e.record.id] = []
+            }
+            break
+            
+          case 'update':
+            // Actualizar el caballo existente
+            const index = caballos.value.findIndex(c => c.id === e.record.id)
+            if (index !== -1) {
+              caballos.value.splice(index, 1, e.record)
+              // Actualizar imágenes si es necesario
+              try {
+                const images = await getImagenesPorCaballo(e.record.id)
+                caballoImages.value[e.record.id] = images
+              } catch (err) {
+                console.warn(`No se pudieron actualizar imágenes para caballo ${e.record.id}:`, err)
+              }
+            }
+            break
+            
+          case 'delete':
+            // Eliminar el caballo de la lista
+            caballos.value = caballos.value.filter(c => c.id !== e.record.id)
+            delete caballoImages.value[e.record.id]
+            
+            // Si el caballo eliminado estaba expandido, cerrar detalles
+            if (expandedCaballoId.value === e.record.id) {
+              expandedCaballoId.value = null
+            }
+            
+            // Si la página actual queda vacía tras borrar, retroceder una página si es posible
+            if (visibleCaballos.value.length === 0 && currentPage.value > 1) {
+              currentPage.value--
+            }
+            break
+        }
+      })
+      
+      console.log('Suscripción en tiempo real activada para caballos')
+    } catch (err) {
+      console.error('Error al suscribirse a actualizaciones en tiempo real:', err)
+    }
+  }
+
+  // Nueva acción: Cancelar suscripción
+  function unsubscribeFromRealtimeUpdates() {
+    if (realtimeSubscription.value) {
+      realtimeSubscription.value.unsubscribe()
+      realtimeSubscription.value = null
+      console.log('Suscripción en tiempo real cancelada para caballos')
     }
   }
 
@@ -150,6 +227,11 @@ export const useCaballosStore = defineStore('caballos', () => {
     searchTerm.value = term
   }
 
+  // Limpiar suscripción cuando el store se destruya
+  onUnmounted(() => {
+    unsubscribeFromRealtimeUpdates()
+  })
+
   // Retornar estado y acciones
   return {
     caballos,
@@ -175,5 +257,7 @@ export const useCaballosStore = defineStore('caballos', () => {
     goPrevDirectional,
     goNextDirectional,
     setSearchTerm,
+    subscribeToRealtimeUpdates,    // Nueva
+    unsubscribeFromRealtimeUpdates // Nueva
   }
 })

@@ -1,7 +1,8 @@
-import { ref, computed } from 'vue'
+import { ref, computed, onUnmounted } from 'vue'
 import { defineStore } from 'pinia'
 import { getListaNoticias, getNoticiaByTitulo, deleteNoticia } from '../backend/noticiaService.js'
 import { getImagenesPorNoticia } from '../backend/imagenService.js'
+import { pb } from '../backend/pb.js'
 
 export const useNoticiasStore = defineStore('noticias', () => {
   // Estado reactivo
@@ -14,6 +15,7 @@ export const useNoticiasStore = defineStore('noticias', () => {
   const pageSize = 9
   const currentPage = ref(1)
   const pageDirection = ref('next') // 'next' | 'prev'
+  const realtimeSubscription = ref(null) // Nueva: para guardar la suscripción
 
   // Computeds
   const totalPages = computed(() => Math.max(1, Math.ceil(noticias.value.length / pageSize)))
@@ -71,6 +73,81 @@ export const useNoticiasStore = defineStore('noticias', () => {
       error.value = err.message || String(err)
     } finally {
       loading.value = false
+    }
+  }
+
+  // Nueva acción: Suscribirse a cambios en tiempo real
+  async function subscribeToRealtimeUpdates() {
+    // Cancelar suscripción anterior si existe
+    if (realtimeSubscription.value) {
+      realtimeSubscription.value.unsubscribe()
+    }
+
+    try {
+      // Suscribirse a la colección 'noticias'
+      realtimeSubscription.value = pb.collection('noticias').subscribe('*', async (e) => {
+        console.log('Evento en tiempo real (noticias):', e.action, e.record)
+        
+        // Actualizar la lista según el tipo de evento
+        switch (e.action) {
+          case 'create':
+            // Añadir la nueva noticia al principio
+            noticias.value.unshift(e.record)
+            // Precargar imágenes para la nueva noticia
+            try {
+              const images = await getImagenesPorNoticia(e.record.id)
+              noticiasImages.value[e.record.id] = images
+            } catch (err) {
+              console.warn(`No se pudieron cargar imágenes para nueva noticia ${e.record.id}:`, err)
+              noticiasImages.value[e.record.id] = []
+            }
+            break
+            
+          case 'update':
+            // Actualizar la noticia existente
+            const index = noticias.value.findIndex(n => n.id === e.record.id)
+            if (index !== -1) {
+              noticias.value.splice(index, 1, e.record)
+              // Actualizar imágenes si es necesario
+              try {
+                const images = await getImagenesPorNoticia(e.record.id)
+                noticiasImages.value[e.record.id] = images
+              } catch (err) {
+                console.warn(`No se pudieron actualizar imágenes para noticia ${e.record.id}:`, err)
+              }
+            }
+            break
+            
+          case 'delete':
+            // Eliminar la noticia de la lista
+            noticias.value = noticias.value.filter(n => n.id !== e.record.id)
+            delete noticiasImages.value[e.record.id]
+            
+            // Si la noticia eliminada estaba expandida, cerrar detalles
+            if (expandedNoticiaId.value === e.record.id) {
+              expandedNoticiaId.value = null
+            }
+            
+            // Si la página actual queda vacía tras borrar, retroceder una página si es posible
+            if (visibleNoticias.value.length === 0 && currentPage.value > 1) {
+              currentPage.value--
+            }
+            break
+        }
+      })
+      
+      console.log('Suscripción en tiempo real activada para noticias')
+    } catch (err) {
+      console.error('Error al suscribirse a actualizaciones en tiempo real:', err)
+    }
+  }
+
+  // Nueva acción: Cancelar suscripción
+  function unsubscribeFromRealtimeUpdates() {
+    if (realtimeSubscription.value) {
+      realtimeSubscription.value.unsubscribe()
+      realtimeSubscription.value = null
+      console.log('Suscripción en tiempo real cancelada para noticias')
     }
   }
 
@@ -152,6 +229,11 @@ export const useNoticiasStore = defineStore('noticias', () => {
     searchTerm.value = term
   }
 
+  // Limpiar suscripción cuando el store se destruya
+  onUnmounted(() => {
+    unsubscribeFromRealtimeUpdates()
+  })
+
   // Retornar estado y acciones
   return {
     noticias,
@@ -177,5 +259,7 @@ export const useNoticiasStore = defineStore('noticias', () => {
     goPrevDirectional,
     goNextDirectional,
     setSearchTerm,
+    subscribeToRealtimeUpdates,    // Nueva
+    unsubscribeFromRealtimeUpdates // Nueva
   }
 })

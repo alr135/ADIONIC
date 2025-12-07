@@ -8,6 +8,11 @@ import { useAuthStore } from '../stores/authStore'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    name: 'Login',
+    component: LoginView
+  },
+  {
+    path: '/caballos',
     name: 'caballos',
     component: HomeView
   },
@@ -15,11 +20,6 @@ const routes: Array<RouteRecordRaw> = [
     path: '/noticias',
     name: 'noticias',
     component: () => import('../views/NoticiasView.vue'),
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: LoginView
   },
   {
     path: '/crear-caballo',

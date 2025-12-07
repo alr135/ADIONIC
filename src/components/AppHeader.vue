@@ -40,7 +40,7 @@ function nav(path) {
 
       <!-- Navegación en línea (solo desktop) -->
       <ion-buttons slot="start" class="nav-inline" v-if="!isCompact">
-        <ion-button :router-link="'/'">Caballos</ion-button>
+        <ion-button :router-link="'/caballos'">Caballos</ion-button>
         <ion-button :router-link="'/noticias'">Noticias</ion-button>
         <ion-button v-if="authStore.isAdmin" :router-link="'/crear-caballo'">Crear Caballo</ion-button>
         <ion-button v-if="authStore.isAdmin" :router-link="'/crear-noticia'">Crear Noticia</ion-button>
@@ -55,7 +55,7 @@ function nav(path) {
       </ion-buttons>
 
       <ion-buttons slot="end" v-if="!isCompact" class="nav-inline">
-        <ion-button v-if="!authStore.isLoggedIn" :router-link="'/login'">Login</ion-button>
+        <ion-button v-if="!authStore.isLoggedIn" :router-link="'/'">Login</ion-button>
         <ion-button v-else @click="handleLogout">Logout</ion-button>
       </ion-buttons>
     </ion-toolbar>
@@ -68,12 +68,12 @@ function nav(path) {
       show-backdrop="true"
     >
       <ion-list>
-        <ion-item button @click="nav('/')">Caballos</ion-item>
+        <ion-item button @click="nav('/caballos')">Caballos</ion-item>
         <ion-item button @click="nav('/noticias')">Noticias</ion-item>
         <ion-item v-if="authStore.isAdmin" button @click="nav('/crear-caballo')">Crear Caballo</ion-item>
         <ion-item v-if="authStore.isAdmin" button @click="nav('/crear-noticia')">Crear Noticia</ion-item>
         <ion-item v-if="authStore.isAdmin" button @click="nav('/crear-pedigri')">Crear Pedigrí</ion-item>
-        <ion-item v-if="!authStore.isLoggedIn" button @click="nav('/login')">Login</ion-item>
+        <ion-item v-if="!authStore.isLoggedIn" button @click="nav('/')">Login</ion-item>
         <ion-item v-else button @click="handleLogout">Logout</ion-item>
       </ion-list>
     </ion-popover>
