@@ -1,0 +1,14 @@
+Requisitos opcionales implementados:
+
+    * CRUD de más de un producto: Se ha realizado además del CRUD para la clase Caballos
+    el CRUD de la clase Noticias, pudiendose editar, crear y eliminar una noticia si 
+    se deseara. Tambien se ha creado una página en la que se pueden ver todas las
+    noticias que se han creado junto con sus detalles, página mediante la cual
+    los administradores dispondrán de un botón que les permitirá editar o eliminar
+    cada una de las noticias cargadas
+
+    * Implementar notificaciones en tiempo real: Mediante el realtime API de Pocketbase
+    se ha implementado la funcionalidad para poder ver en el frontend de Ionic 
+    cualquier cambio que se realice sobre las coleciones de Caballos y de Noticias, 
+    de manera que si una se eliminara, actualizara o se creara algun nuevo elemento
+    en una de ellas se vería reflejado al momento dentro de la web.
